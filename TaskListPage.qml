@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 Page {
@@ -61,26 +61,26 @@ Page {
                 wrapMode: Text.WordWrap
             }
 
-            Button {
+            Rectangle {
                 id: addButton
-                text: "+ Agregar"
                 Layout.preferredWidth: 112
-                Layout.minimumWidth: 112
                 Layout.preferredHeight: 42
-                font.pixelSize: 14
-                background: Rectangle {
-                    radius: 10
-                    color: addButton.down ? "#0B5F67" : "#0E7C86"
-                }
-                contentItem: Text {
-                    text: addButton.text
+                radius: 10
+                color: addMouse.pressed ? "#0B5F67" : "#0E7C86"
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "+ Agregar"
                     color: "white"
-                    font: addButton.font
+                    font.pixelSize: 14
                     font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
                 }
-                onClicked: root.addRequested()
+
+                MouseArea {
+                    id: addMouse
+                    anchors.fill: parent
+                    onClicked: root.addRequested()
+                }
             }
         }
 
@@ -164,57 +164,95 @@ Page {
 
                         RowLayout {
                             Layout.fillWidth: true
+                            spacing: 8
 
-                            CheckBox {
-                                text: taskCard.done ? "Hecha" : "Pendiente"
-                                checked: taskCard.done
-                                onToggled: root.toggleRequested(taskCard.index)
+                            Item {
+                                Layout.preferredWidth: checkRow.implicitWidth
+                                Layout.preferredHeight: 40
+
+                                Row {
+                                    id: checkRow
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    spacing: 8
+
+                                    Rectangle {
+                                        width: 24
+                                        height: 24
+                                        radius: 6
+                                        color: taskCard.done ? "#0E7C86" : "white"
+                                        border.color: "#0E7C86"
+                                        border.width: 2
+
+                                        Text {
+                                            anchors.centerIn: parent
+                                            visible: taskCard.done
+                                            text: "✓"
+                                            color: "white"
+                                            font.pixelSize: 16
+                                            font.bold: true
+                                        }
+                                    }
+
+                                    Label {
+                                        height: 24
+                                        verticalAlignment: Text.AlignVCenter
+                                        text: taskCard.done ? "Hecha" : "Pendiente"
+                                        color: "#111827"
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: root.toggleRequested(taskCard.index)
+                                }
                             }
 
                             Item {
                                 Layout.fillWidth: true
                             }
 
-                            Button {
+                            Rectangle {
                                 id: editButton
-                                text: "Editar"
                                 Layout.preferredWidth: 72
                                 Layout.preferredHeight: 36
-                                font.pixelSize: 12
-                                background: Rectangle {
-                                    radius: 8
-                                    color: editButton.down ? "#1D4ED8" : "#2563EB"
-                                }
-                                contentItem: Text {
-                                    text: editButton.text
+                                radius: 8
+                                color: editMouse.pressed ? "#1D4ED8" : "#2563EB"
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "Editar"
                                     color: "white"
-                                    font: editButton.font
+                                    font.pixelSize: 12
                                     font.bold: true
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
                                 }
-                                onClicked: root.editRequested(taskCard.index)
+
+                                MouseArea {
+                                    id: editMouse
+                                    anchors.fill: parent
+                                    onClicked: root.editRequested(taskCard.index)
+                                }
                             }
 
-                            Button {
+                            Rectangle {
                                 id: deleteButton
-                                text: "Borrar"
                                 Layout.preferredWidth: 72
                                 Layout.preferredHeight: 36
-                                font.pixelSize: 12
-                                background: Rectangle {
-                                    radius: 8
-                                    color: deleteButton.down ? "#B91C1C" : "#DC2626"
-                                }
-                                contentItem: Text {
-                                    text: deleteButton.text
+                                radius: 8
+                                color: deleteMouse.pressed ? "#B91C1C" : "#DC2626"
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "Borrar"
                                     color: "white"
-                                    font: deleteButton.font
+                                    font.pixelSize: 12
                                     font.bold: true
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
                                 }
-                                onClicked: root.deleteRequested(taskCard.index)
+
+                                MouseArea {
+                                    id: deleteMouse
+                                    anchors.fill: parent
+                                    onClicked: root.deleteRequested(taskCard.index)
+                                }
                             }
                         }
                     }

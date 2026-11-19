@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 ApplicationWindow {
     id: appWindow
@@ -9,6 +9,13 @@ ApplicationWindow {
     visible: true
     title: "Cooperativa Pesquera"
     color: "#FFFFFF"
+
+    onClosing: function(close) {
+        if (stackView.depth > 1) {
+            close.accepted = false
+            stackView.pop()
+        }
+    }
 
     ListModel {
         id: activitiesModel

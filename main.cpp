@@ -1,9 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QCoreApplication>
+#include <QQuickWindow>
+#include <QSGRendererInterface>
 
 int main(int argc, char *argv[])
 {
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::Vulkan);
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
