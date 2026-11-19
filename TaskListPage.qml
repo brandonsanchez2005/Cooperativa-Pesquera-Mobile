@@ -5,8 +5,11 @@ import QtQuick.Layouts
 Page {
     id: root
 
+    // Modelo de actividades que llega desde Main.qml
     property var activityModel
 
+    // Señales: la lista solo avisa qué pidió el usuario;
+    // Main.qml es quien modifica los datos
     signal addRequested()
     signal editRequested(int rowIndex)
     signal toggleRequested(int rowIndex)
@@ -19,11 +22,13 @@ Page {
         color: "#FFFFFF"
     }
 
+    // Barra superior con el nombre de la app
     header: ToolBar {
         contentHeight: 58
         background: Rectangle {
             color: "#FFFFFF"
 
+            // Línea gris inferior para separar la barra del contenido
             Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -44,6 +49,7 @@ Page {
         }
     }
 
+    // Columna principal: encabezado, contador y lista
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 18
@@ -61,11 +67,13 @@ Page {
                 wrapMode: Text.WordWrap
             }
 
+            // Botón Agregar: Rectangle con MouseArea (zona que detecta el toque)
             Rectangle {
                 id: addButton
                 Layout.preferredWidth: 112
                 Layout.preferredHeight: 42
                 radius: 10
+                // Cambia de color mientras se mantiene presionado
                 color: addMouse.pressed ? "#0B5F67" : "#0E7C86"
 
                 Text {
@@ -84,6 +92,7 @@ Page {
             }
         }
 
+        // Contador: se actualiza solo al agregar o borrar actividades
         Label {
             Layout.fillWidth: true
             text: root.activityModel ? root.activityModel.count + " actividades" : ""
@@ -94,6 +103,7 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            // ListView crea una tarjeta (delegate) por cada actividad del modelo
             ListView {
                 id: taskList
                 anchors.fill: parent
@@ -101,6 +111,8 @@ Page {
                 spacing: 10
                 model: root.activityModel
 
+                // Tarjeta de una actividad. Las "required property" reciben
+                // los datos de cada fila del modelo
                 delegate: Rectangle {
                     id: taskCard
 
@@ -111,11 +123,13 @@ Page {
                     required property bool done
 
                     width: ListView.view.width
+                    // Altura automática según el contenido de la tarjeta
                     implicitHeight: cardLayout.implicitHeight + 24
                     radius: 14
                     color: "white"
                     border.color: "#E5E7EB"
 
+                    // Franja lateral: verde si está hecha, turquesa si está pendiente
                     Rectangle {
                         anchors.left: parent.left
                         anchors.top: parent.top
@@ -134,6 +148,7 @@ Page {
                         RowLayout {
                             Layout.fillWidth: true
 
+                            // Título: se ve gris cuando la actividad está hecha
                             Label {
                                 Layout.fillWidth: true
                                 text: taskCard.title
@@ -143,6 +158,7 @@ Page {
                                 color: taskCard.done ? "#4B5563" : "#111827"
                             }
 
+                            // Etiqueta con el área (Pesca, Mantenimiento, etc.)
                             Label {
                                 text: taskCard.area
                                 color: "#075985"
@@ -166,6 +182,8 @@ Page {
                             Layout.fillWidth: true
                             spacing: 8
 
+                            // Casilla hecha a mano: cuadro + texto, con un
+                            // MouseArea encima para detectar el toque
                             Item {
                                 Layout.preferredWidth: checkRow.implicitWidth
                                 Layout.preferredHeight: 40
@@ -183,6 +201,7 @@ Page {
                                         border.color: "#0E7C86"
                                         border.width: 2
 
+                                        // La palomita solo aparece si está hecha
                                         Text {
                                             anchors.centerIn: parent
                                             visible: taskCard.done
@@ -201,16 +220,19 @@ Page {
                                     }
                                 }
 
+                                // Al tocar, envía la posición (index) de esta actividad
                                 MouseArea {
                                     anchors.fill: parent
                                     onClicked: root.toggleRequested(taskCard.index)
                                 }
                             }
 
+                            // Espacio flexible que empuja los botones a la derecha
                             Item {
                                 Layout.fillWidth: true
                             }
 
+                            // Botón Editar
                             Rectangle {
                                 id: editButton
                                 Layout.preferredWidth: 72
@@ -233,6 +255,7 @@ Page {
                                 }
                             }
 
+                            // Botón Borrar
                             Rectangle {
                                 id: deleteButton
                                 Layout.preferredWidth: 72
@@ -259,6 +282,7 @@ Page {
                 }
             }
 
+            // Mensaje que solo aparece cuando no hay actividades
             Label {
                 anchors.centerIn: parent
                 width: parent.width * 0.8
